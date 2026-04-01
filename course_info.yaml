@@ -1,0 +1,157 @@
+course:
+  name: "Digital Operations (MBA)"
+  code: "DIGOPS-601"
+  semester: "Spring 2026"
+  professor: "Prof. [Your Name]"
+  office_hours: "Tuesdays and Thursdays, 2–4 PM (Room 210)"
+  email: "professor@university.edu"
+  location: "Room 305, Business School"
+  schedule: "Mondays & Wednesdays, 6:00–7:30 PM"
+
+description: |
+  This course explores how digital technologies transform business operations.
+  Topics include process automation, data-driven decision making, platform
+  economics, supply chain digitization, and the organizational challenges of
+  digital transformation.
+
+grading:
+  - component: "Class Participation"
+    weight: "15%"
+  - component: "Weekly Case Memos (8 total)"
+    weight: "20%"
+  - component: "Midterm Exam"
+    weight: "20%"
+  - component: "Group Project – Digital Ops Audit"
+    weight: "25%"
+  - component: "Final Exam"
+    weight: "20%"
+
+deadlines:
+  - name: "Case Memo 1 – Amazon Fulfillment Network"
+    due: "2026-02-02 (Monday, 11:59 PM)"
+  - name: "Case Memo 2 – Zara's Digital Supply Chain"
+    due: "2026-02-09 (Monday, 11:59 PM)"
+  - name: "Case Memo 3 – Uber's Surge Pricing"
+    due: "2026-02-16 (Monday, 11:59 PM)"
+  - name: "Group Project – Team Formation & Topic Selection"
+    due: "2026-02-18 (Wednesday, 11:59 PM)"
+  - name: "Case Memo 4 – Netflix Recommendation Engine"
+    due: "2026-02-23 (Monday, 11:59 PM)"
+  - name: "Midterm Exam"
+    due: "2026-03-04 (Wednesday, in class)"
+  - name: "Case Memo 5 – JPMorgan Chase Automation"
+    due: "2026-03-09 (Monday, 11:59 PM)"
+  - name: "Spring Break – No Class"
+    due: "2026-03-16 to 2026-03-20"
+  - name: "Case Memo 6 – Tesla's Vertical Integration"
+    due: "2026-03-23 (Monday, 11:59 PM)"
+  - name: "Group Project – Progress Presentation (5 min)"
+    due: "2026-04-01 (Wednesday, in class)"
+  - name: "Case Memo 7 – Airbnb Platform Operations"
+    due: "2026-04-06 (Monday, 11:59 PM)"
+  - name: "Case Memo 8 – Walmart's Digital Transformation"
+    due: "2026-04-13 (Monday, 11:59 PM)"
+  - name: "Group Project – Final Report"
+    due: "2026-04-22 (Wednesday, 11:59 PM)"
+  - name: "Group Project – Final Presentations"
+    due: "2026-04-27 (Monday, in class)"
+  - name: "Final Exam"
+    due: "2026-05-06 (Wednesday, 6:00–8:00 PM, Room 305)"
+
+modules:
+  - module: 1
+    title: "Foundations of Digital Operations"
+    weeks: "Weeks 1–2"
+    topics:
+      - "What is digital operations? Definitions and scope"
+      - "The digital operations stack: data, automation, platforms"
+      - "How digital changes the economics of operations"
+    readings:
+      - "Course packet: Chapter 1 – Digital Operations Framework"
+      - "HBR: 'The Age of Continuous Connection' (Sigala & Kumar)"
+    cases:
+      - "Amazon Fulfillment Network (HBS 9-618-028)"
+
+  - module: 2
+    title: "Process Automation & AI in Operations"
+    weeks: "Weeks 3–4"
+    topics:
+      - "Robotic process automation (RPA) vs. AI-driven automation"
+      - "Workflow orchestration and decision automation"
+      - "Change management for automation initiatives"
+    readings:
+      - "Course packet: Chapter 2 – Automation Frameworks"
+      - "MIT Sloan: 'The Business of Artificial Intelligence'"
+    cases:
+      - "JPMorgan Chase COiN Platform (HBS 9-619-021)"
+      - "Zara's Digital Supply Chain (INSEAD 6-319-023)"
+
+  - module: 3
+    title: "Data-Driven Decision Making"
+    weeks: "Weeks 5–6"
+    topics:
+      - "From operational data to operational intelligence"
+      - "A/B testing and experimentation at scale"
+      - "Algorithmic decision-making: benefits and pitfalls"
+    readings:
+      - "Course packet: Chapter 3 – Analytics in Operations"
+      - "HBR: 'Building an AI-First Culture' (Davenport)"
+    cases:
+      - "Netflix Recommendation Engine (HBS 9-615-077)"
+      - "Uber Surge Pricing (Stanford GSB E-575)"
+
+  - module: 4
+    title: "Platform Operations & Ecosystems"
+    weeks: "Weeks 7–8 (includes Midterm)"
+    topics:
+      - "Platform business models and two-sided markets"
+      - "Operational challenges of marketplace platforms"
+      - "Trust, safety, and quality at scale"
+    readings:
+      - "Course packet: Chapter 4 – Platform Economics"
+      - "Platforms, Markets, and Innovation (Gawer & Cusumano) – Ch. 2"
+    cases:
+      - "Airbnb Platform Operations (HBS 9-617-024)"
+
+  - module: 5
+    title: "Supply Chain Digitization"
+    weeks: "Weeks 9–10"
+    topics:
+      - "IoT and real-time visibility in supply chains"
+      - "Demand sensing and dynamic replenishment"
+      - "Resilience vs. efficiency trade-offs"
+    readings:
+      - "Course packet: Chapter 5 – Digital Supply Chains"
+    cases:
+      - "Tesla's Vertical Integration (HBS 9-620-027)"
+      - "Walmart Digital Transformation (HBS 9-621-034)"
+
+  - module: 6
+    title: "Digital Transformation – Strategy & Execution"
+    weeks: "Weeks 11–13"
+    topics:
+      - "Org structures for digital operations"
+      - "Build vs. buy vs. partner decisions"
+      - "Measuring digital transformation ROI"
+      - "Ethics and the future of work"
+    readings:
+      - "Course packet: Chapter 6 – Leading Digital Change"
+      - "HBR: 'Digital Doesn't Have to Be Disruptive'"
+    cases:
+      - "Group project presentations"
+
+policies:
+  late_work: "Case memos submitted late are penalized 10% per day. No submissions accepted after 72 hours."
+  attendance: "More than 3 absences will lower your participation grade by a full letter grade."
+  ai_tools: >
+    You may use AI tools (including ChatGPT, Claude, etc.) for brainstorming
+    and research, but the final written work must be your own. Submitting
+    AI-generated text verbatim constitutes academic dishonesty.
+  group_project_size: "Groups of 4–5 students. Cross-functional diversity encouraged."
+  collaboration: "Case memos are individual assignments. Discussing ideas with classmates is fine; copying is not."
+
+resources:
+  lms: "Course materials, slides, and grades are on Canvas (canvas.university.edu)"
+  cases: "HBS cases are available through the course packet purchased at the bookstore or online via HBS Publishing."
+  office_hours_signup: "Sign up for 1:1 office hours slots via Calendly (link on Canvas)."
+  ta: "Teaching Assistant: [TA Name] – ta.digops@university.edu – holds review sessions Fridays 1–2 PM (Room 108)"
