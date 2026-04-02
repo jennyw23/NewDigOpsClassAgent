@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ course.course.code }} — Course Assistant</title>
+  <style>
+    /* ── Reset & Base ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f5f6f8;
+      --surface:   #ffffff;
+      --sidebar-bg:#1e2535;
+      --accent:    #4f6ef7;
+      --accent-dk: #3a57d4;
+      --user-bg:   #4f6ef7;
+      --bot-bg:    #f0f2fc;
+      --text:      #1a1d27;
+      --muted:     #6b7280;
+      --border:    #e4e7ef;
+      --radius:    12px;
+      --font:      'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────── */
+    header {
+      background: var(--sidebar-bg);
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+      z-index: 10;
+    }
+
+    .header-icon {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: grid; place-items: center;
+      font-size: 18px;
+    }
+
+    .header-title { font-size: 1.05rem; font-weight: 600; }
+    .header-sub   { font-size: .8rem; opacity: .6; margin-top: 1px; }
+
+    /* ── Layout ──────────────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────────────── */
+    aside {
+      width: 280px;
+      background: var(--sidebar-bg);
+      color: #cdd2e0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,.06);
+    }
+
+    aside::-webkit-scrollbar { width: 4px; }
+    aside::-webkit-scrollbar-track { background: transparent; }
+    aside::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+
+    .sidebar-section { padding: 18px 18px 10px; }
+
+    .sidebar-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 10px;
+    }
+
+    .info-card {
+      background: rgba(255,255,255,.06);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+
+    .info-card .card-label {
+      font-size: .72rem;
+      color: rgba(255,255,255,.4);
+      margin-bottom: 3px;
+    }
+
+    .info-card .card-value {
+      color: #e2e6f3;
+      font-weight: 500;
+    }
+
+    .deadline-item {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: .8rem;
+      line-height: 1.4;
+    }
+
+    .deadline-item:last-child { border-bottom: none; }
+
+    .deadline-name { color: #e2e6f3; font-weight: 500; }
+    .deadline-date { color: rgba(255,255,255,.4); font-size: .74rem; margin-top: 2px; }
+
+    .deadline-item.upcoming .deadline-name { color: #93c5fd; }
+    .deadline-item.next     .deadline-name { color: #fbbf24; }
+
+    .badge {
+      display: inline-block;
+      font-size: .65rem;
+      padding: 1px 6px;
+      border-radius: 20px;
+      margin-left: 6px;
+      font-weight: 700;
+      vertical-align: middle;
+    }
+
+    .badge-next     { background: #fbbf24; color: #1a1d27; }
+    .badge-upcoming { background: #3b82f6; color: #fff; }
+
+    .module-item {
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: .8rem;
+    }
+
+    .module-item:last-child { border-bottom: none; }
+
+    .module-num {
+      font-size: .68rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .module-title { color: #e2e6f3; line-height: 1.4; }
+
+    .grading-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .8rem;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .grading-row:last-child { border-bottom: none; }
+    .grading-row .g-comp { color: #cdd2e0; }
+    .grading-row .g-pct  { color: var(--accent); font-weight: 600; font-size: .78rem; }
+
+    /* ── Chat area ───────────────────────────────────────────────── */
+    .chat-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .messages::-webkit-scrollbar { width: 5px; }
+    .messages::-webkit-scrollbar-track { background: transparent; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ── Messages ────────────────────────────────────────────────── */
+    .msg {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      max-width: 760px;
+      animation: fadeUp .18s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+    .msg.bot  { align-self: flex-start; }
+
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .msg.user .avatar { background: var(--accent); color: #fff; }
+    .msg.bot  .avatar { background: #eef0f9; color: var(--accent); font-size: 16px; }
+
+    .bubble {
+      padding: 11px 15px;
+      border-radius: var(--radius);
+      line-height: 1.6;
+      font-size: .92rem;
+      max-width: calc(100% - 48px);
+    }
+
+    .msg.user .bubble {
+      background: var(--user-bg);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.bot .bubble {
+      background: var(--bot-bg);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+
+    /* Markdown-ish styling inside bot bubbles */
+    .bubble strong { font-weight: 600; }
+    .bubble em     { font-style: italic; }
+
+    .bubble code {
+      background: rgba(0,0,0,.06);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: .88em;
+      font-family: 'Consolas', 'Fira Mono', monospace;
+    }
+
+    .bubble ul, .bubble ol {
+      padding-left: 18px;
+      margin: 6px 0;
+    }
+
+    .bubble li { margin: 3px 0; }
+
+    .bubble p + p { margin-top: 6px; }
+
+    /* Typing cursor */
+    .cursor {
+      display: inline-block;
+      width: 2px; height: 1em;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink .7s step-end infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* Welcome card */
+    .welcome {
+      text-align: center;
+      padding: 32px 24px;
+      color: var(--muted);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .welcome-icon { font-size: 2.4rem; }
+
+    .welcome h2 {
+      font-size: 1.15rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .welcome p { font-size: .88rem; max-width: 360px; }
+
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .suggestion-btn {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-size: .8rem;
+      color: var(--accent);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background .15s, border-color .15s;
+    }
+
+    .suggestion-btn:hover {
+      background: #eef0fd;
+      border-color: var(--accent);
+    }
+
+    /* ── Input area ──────────────────────────────────────────────── */
+    .input-area {
+      padding: 14px 20px 18px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    #msg-input {
+      flex: 1;
+      resize: none;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: var(--font);
+      font-size: .92rem;
+      line-height: 1.5;
+      max-height: 140px;
+      min-height: 42px;
+      outline: none;
+      transition: border-color .15s;
+      overflow-y: auto;
+    }
+
+    #msg-input:focus { border-color: var(--accent); }
+
+    #send-btn {
+      width: 42px; height: 42px;
+      border: none;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: grid; place-items: center;
+      flex-shrink: 0;
+      transition: background .15s, transform .1s;
+    }
+
+    #send-btn:hover:not(:disabled) { background: var(--accent-dk); }
+    #send-btn:active:not(:disabled) { transform: scale(.93); }
+
+    #send-btn:disabled {
+      background: var(--border);
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      aside { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────── -->
+<header>
+  <div class="header-icon">🎓</div>
+  <div>
+    <div class="header-title">{{ course.course.name }} ({{ course.course.code }})</div>
+    <div class="header-sub">{{ course.course.semester }} · {{ course.course.schedule }}</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
+  <aside>
+
+    <!-- Course Info -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">Course Info</div>
+      <div class="info-card">
+        <div class="card-label">Professor</div>
+        <div class="card-value">{{ course.course.professor }}</div>
+      </div>
+      <div class="info-card">
+        <div class="card-label">Location</div>
+        <div class="card-value">{{ course.course.location }}</div>
+      </div>
+      <div class="info-card">
+        <div class="card-label">Office Hours</div>
+        <div class="card-value">{{ course.course.office_hours }}</div>
+      </div>
+    </div>
+
+    <!-- Deadlines -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">Deadlines</div>
+      {% for d in course.deadlines %}
+      <div class="deadline-item" data-due="{{ d.due }}">
+        <div class="deadline-name">{{ d.name }}</div>
+        <div class="deadline-date">{{ d.due }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Grading -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">Grading</div>
+      {% for g in course.grading %}
+      <div class="grading-row">
+        <span class="g-comp">{{ g.component }}</span>
+        <span class="g-pct">{{ g.weight }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Modules -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">Modules</div>
+      {% for mod in course.modules %}
+      <div class="module-item">
+        <div class="module-num">Module {{ mod.module }} · {{ mod.weeks }}</div>
+        <div class="module-title">{{ mod.title }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </aside>
+
+  <!-- ── Chat ────────────────────────────────────────────────────────── -->
+  <div class="chat-wrap">
+
+    <div class="messages" id="messages">
+      <div class="welcome" id="welcome">
+        <div class="welcome-icon">📚</div>
+        <h2>Hi! I'm your DIGOPS-601 assistant.</h2>
+        <p>Ask me anything about deadlines, assignments, policies, or course materials.</p>
+        <div class="suggestions">
+          <button class="suggestion-btn" onclick="sendSuggestion(this)">What's due next?</button>
+          <button class="suggestion-btn" onclick="sendSuggestion(this)">Explain the grading breakdown</button>
+          <button class="suggestion-btn" onclick="sendSuggestion(this)">What's the late work policy?</button>
+          <button class="suggestion-btn" onclick="sendSuggestion(this)">When is the midterm?</button>
+          <button class="suggestion-btn" onclick="sendSuggestion(this)">Tell me about the group project</button>
+          <button class="suggestion-btn" onclick="sendSuggestion(this)">What are Module 3 topics?</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <textarea
+        id="msg-input"
+        placeholder="Ask about deadlines, assignments, policies…"
+        rows="1"
+        autocomplete="off"
+      ></textarea>
+      <button id="send-btn" title="Send (Enter)">&#9658;</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── State ─────────────────────────────────────────────────────────────────
+  const history = [];       // [{role, content}, ...]
+  let busy = false;
+
+  // ── DOM refs ──────────────────────────────────────────────────────────────
+  const messagesEl = document.getElementById('messages');
+  const inputEl    = document.getElementById('msg-input');
+  const sendBtn    = document.getElementById('send-btn');
+  const welcomeEl  = document.getElementById('welcome');
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function scrollBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  /** Very light Markdown → HTML (bold, italic, inline code, lists) */
+  function renderMd(text) {
+    // Escape HTML first
+    let s = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    // Bold / italic / code (inline)
+    s = s
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,     '<em>$1</em>')
+      .replace(/`(.+?)`/g,       '<code>$1</code>');
+
+    // Bullet lists
+    s = s.replace(/(^|\n)([ \t]*[-*•] .+(?:\n[ \t]+.+)*)/g, (m, pre, block) => {
+      const items = block.trim().split(/\n[ \t]*[-*•] /).map(i => i.replace(/^[-*•] /, '').trim());
+      return pre + '<ul>' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
+    });
+
+    // Numbered lists
+    s = s.replace(/(^|\n)([ \t]*\d+\. .+(?:\n[ \t]+.+)*)/g, (m, pre, block) => {
+      const items = block.trim().split(/\n[ \t]*\d+\. /).map(i => i.replace(/^\d+\. /, '').trim());
+      return pre + '<ol>' + items.map(i => `<li>${i}</li>`).join('') + '</ol>';
+    });
+
+    // Paragraphs (double newline → <p>)
+    s = s.split(/\n{2,}/).map(p => {
+      if (p.startsWith('<ul>') || p.startsWith('<ol>')) return p;
+      return `<p>${p.replace(/\n/g, '<br>')}</p>`;
+    }).join('');
+
+    return s;
+  }
+
+  function appendUserMsg(text) {
+    welcomeEl && (welcomeEl.style.display = 'none');
+    const div = document.createElement('div');
+    div.className = 'msg user';
+    div.innerHTML = `
+      <div class="avatar">👤</div>
+      <div class="bubble">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    `;
+    messagesEl.appendChild(div);
+    scrollBottom();
+  }
+
+  function appendBotMsg() {
+    welcomeEl && (welcomeEl.style.display = 'none');
+    const div = document.createElement('div');
+    div.className = 'msg bot';
+    div.innerHTML = `
+      <div class="avatar">🎓</div>
+      <div class="bubble" id="stream-bubble"><span class="cursor"></span></div>
+    `;
+    messagesEl.appendChild(div);
+    scrollBottom();
+    return div.querySelector('#stream-bubble');
+  }
+
+  function setLoading(on) {
+    busy = on;
+    sendBtn.disabled = on;
+    inputEl.disabled = on;
+  }
+
+  // ── Core send ─────────────────────────────────────────────────────────────
+  async function sendMessage(text) {
+    if (!text.trim() || busy) return;
+
+    setLoading(true);
+    appendUserMsg(text);
+
+    const bubble = appendBotMsg();
+    let accumulated = '';
+
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history }),
+      });
+
+      if (!res.ok) {
+        bubble.innerHTML = '<em style="color:#ef4444">Error connecting to the server. Please try again.</em>';
+        setLoading(false);
+        return;
+      }
+
+      const reader  = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buf += decoder.decode(value, { stream: true });
+
+        // Process complete SSE lines
+        const lines = buf.split('\n');
+        buf = lines.pop(); // keep incomplete last line
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const payload = line.slice(6);
+          if (payload === '[DONE]') break;
+
+          let parsed;
+          try { parsed = JSON.parse(payload); } catch { continue; }
+
+          if (parsed.error) {
+            bubble.innerHTML = `<em style="color:#ef4444">Error: ${parsed.error}</em>`;
+            setLoading(false);
+            return;
+          }
+
+          if (parsed.text) {
+            accumulated += parsed.text;
+            // Re-render with cursor
+            bubble.innerHTML = renderMd(accumulated) + '<span class="cursor"></span>';
+            bubble.id = '';  // id only needed initially
+            scrollBottom();
+          }
+        }
+      }
+
+      // Final render — remove cursor
+      bubble.innerHTML = renderMd(accumulated);
+      bubble.id = '';
+
+      // Update history
+      history.push({ role: 'user',      content: text });
+      history.push({ role: 'assistant', content: accumulated });
+
+    } catch (err) {
+      bubble.innerHTML = `<em style="color:#ef4444">Network error: ${err.message}</em>`;
+    }
+
+    setLoading(false);
+    inputEl.focus();
+    scrollBottom();
+  }
+
+  // ── Event listeners ───────────────────────────────────────────────────────
+  sendBtn.addEventListener('click', () => {
+    const text = inputEl.value.trim();
+    if (text) { inputEl.value = ''; autoResize(); sendMessage(text); }
+  });
+
+  inputEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const text = inputEl.value.trim();
+      if (text) { inputEl.value = ''; autoResize(); sendMessage(text); }
+    }
+  });
+
+  function autoResize() {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + 'px';
+  }
+
+  inputEl.addEventListener('input', autoResize);
+
+  function sendSuggestion(btn) {
+    sendMessage(btn.textContent);
+  }
+
+  // ── Deadline badge highlighting ───────────────────────────────────────────
+  (function highlightDeadlines() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const items = document.querySelectorAll('.deadline-item[data-due]');
+    let firstUpcoming = true;
+
+    items.forEach(item => {
+      const raw = item.dataset.due;
+      // Extract first YYYY-MM-DD from the string
+      const m = raw.match(/(\d{4}-\d{2}-\d{2})/);
+      if (!m) return;
+
+      const due = new Date(m[1]);
+      due.setHours(0, 0, 0, 0);
+
+      if (due >= today) {
+        if (firstUpcoming) {
+          item.classList.add('next');
+          item.querySelector('.deadline-name').insertAdjacentHTML(
+            'beforeend', '<span class="badge badge-next">next</span>'
+          );
+          firstUpcoming = false;
+        } else {
+          item.classList.add('upcoming');
+        }
+      }
+    });
+  })();
+
+  // Focus input on load
+  inputEl.focus();
+</script>
+
+</body>
+</html>
